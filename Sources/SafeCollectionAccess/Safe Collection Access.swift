@@ -167,3 +167,77 @@ public extension RandomAccessCollection {
         }
     }
 }
+
+
+
+// MARK: - `nil` or `index(before:)`/`index(after:)`
+
+public extension BidirectionalCollection {
+    
+    /// Returns the position immediately after the given index, or `nil` if there is none.
+    ///
+    /// The successor of an index must be well defined. For an index `i` into an immutable
+    /// collection `c`, calling `c.index(after: i)` returns the same index every
+    /// time.
+    ///
+    /// - Parameter i: An index of the collection.
+    /// - Returns: The index value immediately after `i`, or `nil` if such an index wouldn't be in the collection.
+    func indexOrNil(after i: Index) -> Index? {
+        guard i < endIndex else { return nil }
+        return index(after: i)
+    }
+    
+    
+    /// Replaces the given index with its successor, or `nil` if there is none.
+    ///
+    /// `i` is set to `nil` if the resulting index wouldn't be in the collection.
+    ///
+    /// - Parameter i: An index of the collection.
+    func formIndexOrNil(after i: inout Index?) {
+        guard let nonNilIndex = i else { return }
+        i = indexOrNil(after: nonNilIndex)
+    }
+    
+    
+    /// Returns the position immediately before the given index, or `nil` if there is none.
+    ///
+    /// - Parameter i: An index of the collection.
+    /// - Returns: The index value immediately before `i`, or `nil` if such an index wouldn't be in the collection.
+    func indexOrNil(before i: Index) -> Index? {
+        guard i > startIndex else { return nil }
+        return index(before: i)
+    }
+    
+    
+    /// Replaces the given index with its predecessor, or `nil` if there is none.
+    ///
+    /// `i` is set to `nil` if the resulting index wouldn't be in the collection.
+    ///
+    /// - Parameter i: An index of the collection.
+    func formIndexOrNil(before i: inout Index?) {
+        guard let nonNilIndex = i else { return }
+        i = indexOrNil(before: nonNilIndex)
+    }
+    
+    
+    /// Returns an index that is the specified distance from the given index, or `nil` if there isn't one.
+    ///
+    /// - Parameters:
+    ///   - i:        A valid index of the collection.
+    ///   - distance: The distance to offset `i`. `distance` must not be negative unless the collection conforms to the `BidirectionalCollection` protocol.
+    /// - Returns: An index offset by `distance` from the index `i`.
+    ///            If `distance` is positive, this is the same value as the result of `distance` calls to `index(after:)`.
+    ///            If `distance` is negative, this is the same value as the result of `abs(distance)` calls to `index(before:)`.
+    ///            If the index which would be `distance` from `i` would lie outside this collection, this returns `nil`.
+    func indexOrNil(_ i: Index, offsetBy distance: Int) -> Index? {
+        if distance > 0 {
+            index(i, offsetBy: distance, limitedBy: endIndex)
+        }
+        else if distance < 0 {
+            index(i, offsetBy: distance, limitedBy: startIndex)
+        }
+        else {
+            i
+        }
+    }
+}
