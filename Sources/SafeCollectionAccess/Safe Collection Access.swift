@@ -176,9 +176,7 @@ public extension BidirectionalCollection {
     
     /// Returns the position immediately after the given index, or `nil` if there is none.
     ///
-    /// The successor of an index must be well defined. For an index `i` into an immutable
-    /// collection `c`, calling `c.index(after: i)` returns the same index every
-    /// time.
+    /// The successor of an index must be well defined. For an index `i` into an immutable collection `c`, calling `c.index(after: i)` returns the same index every time.
     ///
     /// - Parameter i: An index of the collection.
     /// - Returns: The index value immediately after `i`, or `nil` if such an index wouldn't be in the collection.
@@ -190,7 +188,8 @@ public extension BidirectionalCollection {
     
     /// Replaces the given index with its successor, or `nil` if there is none.
     ///
-    /// `i` is set to `nil` if the resulting index wouldn't be in the collection.
+    /// If you pass `nil` for `i`, this returns immediately because there's nothing after nothing.
+    /// If the resulting index wouldn't be in the collection, then `i` is set to `nil`.
     ///
     /// - Parameter i: An index of the collection.
     func formIndexOrNil(after i: inout Index?) {
@@ -211,7 +210,8 @@ public extension BidirectionalCollection {
     
     /// Replaces the given index with its predecessor, or `nil` if there is none.
     ///
-    /// `i` is set to `nil` if the resulting index wouldn't be in the collection.
+    /// If you pass `nil` for `i`, this returns immediately because there's nothing before nothing.
+    /// If the resulting index wouldn't be in the collection, then `i` is set to `nil`.
     ///
     /// - Parameter i: An index of the collection.
     func formIndexOrNil(before i: inout Index?) {
@@ -224,7 +224,9 @@ public extension BidirectionalCollection {
     ///
     /// - Parameters:
     ///   - i:        A valid index of the collection.
-    ///   - distance: The distance to offset `i`. `distance` must not be negative unless the collection conforms to the `BidirectionalCollection` protocol.
+    ///   - distance: The distance to offset `i`.
+    ///               `distance` may be negative.
+    ///
     /// - Returns: An index offset by `distance` from the index `i`.
     ///            If `distance` is positive, this is the same value as the result of `distance` calls to `index(after:)`.
     ///            If `distance` is negative, this is the same value as the result of `abs(distance)` calls to `index(before:)`.
